@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+import static android.widget.Toast.LENGTH_LONG;
+
 public class Remindabout extends AppCompatActivity {
     public static final int JOB_ID = 123;
     TextView textView;
@@ -26,24 +28,23 @@ public class Remindabout extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_remindabout);
+        editText = findViewById(R.id.editText);
+        textView = findViewById(R.id.textView);
+    }
+
+    public void currentscenario(View v) {
         Intent intentthatstarted = getIntent();
         day = intentthatstarted.getIntExtra("day", 1);
         month = intentthatstarted.getIntExtra("month", 1);
         year = intentthatstarted.getIntExtra("year", 0);
         hour = intentthatstarted.getIntExtra("hour", 0);
         minute = intentthatstarted.getIntExtra("min", 0);
-        editText = findViewById(R.id.editText);
-        textView = findViewById(R.id.textView);
-    }
-
-    public void currentscenario(View v) {
-        remind r;
-        r = new remind();
+        Toast.makeText(this, "Reminder Set successfully", LENGTH_LONG).show();
+        remind r = new remind();
         r.execute();
     }
 
-    class remind extends AsyncTask<Void, Void, Void> {
-
+    public class remind extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
             while (true) {
@@ -52,7 +53,7 @@ public class Remindabout extends AppCompatActivity {
                 m = c.get(Calendar.MONTH);
                 m += 1;
                 y = c.get(Calendar.YEAR);
-                h = c.get(Calendar.HOUR);
+                h = c.get(Calendar.HOUR_OF_DAY);
                 mi = c.get(Calendar.MINUTE);
                 if (d == day && m == month && y == year && mi == minute && h == hour) {
                     schedulejob();
@@ -63,7 +64,8 @@ public class Remindabout extends AppCompatActivity {
         }
 
 
-        protected void schedulejob() {
+
+        private void schedulejob() {
 
             JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
             JobInfo jobInfo = new JobInfo.Builder(JOB_ID, new ComponentName(Remindabout.this, reminder.class))
@@ -75,8 +77,6 @@ public class Remindabout extends AppCompatActivity {
 
 
         }
-
-
     }
 }
 

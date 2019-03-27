@@ -8,10 +8,7 @@ public class reminder extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters params) {
-
         Toast.makeText(this, "your reminder", Toast.LENGTH_LONG).show();
-
-
         return false;
 
     }
